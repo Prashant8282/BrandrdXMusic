@@ -1,25 +1,18 @@
-from pyrogram.types import InlineKeyboardButton
-import config
+from pyrogram import Client, filters
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
-def song_markup(_, vidid):
-    buttons = [
-        [
-            InlineKeyboardButton(
-                text=_["SG_B_2"],
-                callback_data=f"song_helper audio|{vidid}",
-            ),
-            InlineKeyboardButton(
-                text=_["SG_B_3"],
-                callback_data=f"song_helper video|{vidid}",
-            ),
-        ],
-        [
-            InlineKeyboardButton(
-                text="🥀 sᴜᴩᴩᴏʀᴛ 🥀", url=f"{config.SUPPORT_CHAT}",
-            ),
-            InlineKeyboardButton(
-                text=_["CLOSE_BUTTON"], callback_data="close"
-            ),
-        ],
-    ]
-    return buttons
+# Initialize your Pyrogram client
+app = Client("MUSIC MASTER")
+
+# Define the /song command handler
+@app.on_message(filters.command("song"))
+async def song_command(client, message):
+    # Create an inline keyboard button that redirects to @songdowningbot
+    button = InlineKeyboardButton("Click here to download song", url="https://t.me/songdowningbot")
+    keyboard = InlineKeyboardMarkup([[button]])
+
+    # Send a message with the inline keyboard button
+    await message.reply_text("Download your song:", reply_markup=keyboard)
+
+# Run the client
+app.run()
